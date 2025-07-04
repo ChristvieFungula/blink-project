@@ -1,1 +1,2 @@
 # blink-project
+Jag har skapat programmet i C som får en LED att blinka på digital pin 2 (PD2) med hjälp av Timer1 i CTC-läge och avbrott. Jag använder ingen Arduino-kod, utan arbetar direkt mot registren enligt beskrivningen på ilnmämningsuppgiften. Blinktiden är inställd på 500 ms. Koden är testad i Wokwi eftersom jag inte har tillgång till fysisk hårdvara. 

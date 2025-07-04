@@ -1,0 +1,9 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/Users/chrisfungz/Documents/PROJECT/blink-project",
+            "binaryPath": "/Users/chrisfungz/Documents/PROJECT/blink-project/blink.elf",
+            "binaryArgs": []
+        }
+    ]
+}
