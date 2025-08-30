@@ -11,7 +11,8 @@ typedef enum {
     DELAY_2S
 } delay_t;
 
-void gpio_init(delay_t delay);
+void gpio_init(uint8_t arduino_pin, delay_t delay);
 void start_blinking(void);
+void stop_blinking(void);
 
 #endif
