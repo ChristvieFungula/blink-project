@@ -1,34 +1,31 @@
-# MCU och CPU-hastighet
-MCU = atmega328p
-F_CPU = 16000000UL
+MCU:=atmega328p
+F_CPU:=16000000UL
+BUILD:=build
+TARGET:=$(BUILD)/blink
+SRCS:=main.c gpio_driver.c
+OBJS:=$(SRCS:%.c=$(BUILD)/%.o)
 
-# Verktyg
-CC = avr-gcc
-OBJCOPY = avr-objcopy
-CFLAGS = -Wall -Os -DF_CPU=$(F_CPU) -mmcu=$(MCU)
+CC:=avr-gcc
+OBJCOPY:=avr-objcopy
+CFLAGS:=-mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os -std=c11 -Wall -Wextra -ffunction-sections -fdata-sections
+LDFLAGS:=-mmcu=$(MCU) -Wl,--gc-sections
 
-# Filer
-SRC = main.c gpio_driver.c
-OBJ = $(SRC:.c=.o)
-TARGET = blink.elf
-HEX = blink.hex
+all: $(BUILD) $(TARGET).hex
 
-# Standardmål
-all: $(HEX)
+$(BUILD):
+	mkdir -p $(BUILD)
 
-%.o: %.c
+$(BUILD)/%.o: %.c | $(BUILD)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(TARGET): $(OBJ)
-	$(CC) $(CFLAGS) $^ -o $@
+$(TARGET).elf: $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $^
 
-$(HEX): $(TARGET)
+$(TARGET).hex: $(TARGET).elf
 	$(OBJCOPY) -O ihex -R .eeprom $< $@
 
-# Flasha till Arduino via avrdude
-flash: $(HEX)
-	avrdude -c arduino -p m328p -P /dev/tty.usbserial-1410 -b 115200 -U flash:w:$(HEX):i
+flash: $(TARGET).hex
+	avrdude -v -p$(MCU) -carduino -P $(PORT) -b$(BAUD) -D -U flash:w:$(TARGET).hex:i
 
-# Rensa
 clean:
-	rm -f *.o *.elf *.hex
+	rm -rf $(BUILD)
